@@ -14,10 +14,20 @@ public abstract class IHandler {
         this.next = next;
     }
 
-    public final Response handlerRequest() {
-        return null;
+    public final Response handlerRequest(Request request) {
+        Response response = null;
+        if (this.getHandleLevel() == request.getLevel()) {
+            response = exec(request);
+        } else if (next != null) {
+            return next.handlerRequest(request);
+        } else {
+            System.out.println("无法处理请求，参数异常");
+        }
+        return response;
     }
 
-    protected abstract void exec();
+    protected abstract Response exec(Request request);
+
+    public abstract int getHandleLevel();
 
 }
